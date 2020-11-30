@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class AddContact extends StatelessWidget {
-
   AddContact({this.db});
+
   var database = DataBase();
   var db;
   final _form = GlobalKey<FormState>();
@@ -20,158 +20,232 @@ class AddContact extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add New Contact'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text('New Contact',style: TextStyle(color: Colors.black),),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.of(context)
+              .pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen())),
+        ),
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.save,
+                color: Colors.blue,
+              ),
+              onPressed: () {
+                final isValid = _form.currentState.validate();
+                if (!isValid) {
+                  return;
+                }
+                String image = imageController.text;
+                String name = nameController.text;
+                String number1 = number1Controller.text;
+                String number2 = number2Controller.text;
+                String address = addressController.text;
+                if (image.isEmpty ||
+                    name.isEmpty ||
+                    number1.isEmpty ||
+                    address.isEmpty) {
+                  Fluttertoast.showToast(msg: 'please complete fields');
+                  return;
+                }
+                database
+                    .insertData(
+                        database: db,
+                        image: image,
+                        name: name,
+                        number1: int.parse(number1),
+                        number2: int.parse(number2),
+                        address: address)
+                    .then((value) {
+                  Fluttertoast.showToast(
+                      msg: 'Contact Added Successfully',
+                      backgroundColor: Colors.green);
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                });
+              }),
+        ],
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            key: _form,
-            child: Card(
-              color: Colors.grey[100],
+        child: Form(
+          key: _form,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  customFormField(
-                    controller: imageController,
-                    type: TextInputType.url,
-                    hint: 'Enter image Url',
-                    isPassword: false,
-                    valid: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter an image URL';
-                      }
-                      if (!value.startsWith('http') &&
-                          !value.startsWith('https')) {
-                        return 'Please enter a valid URL';
-                      }
-                      if (!value.endsWith('.png') &&
-                          !value.endsWith('.jpg') &&
-                          !value.endsWith('jpeg')) {
-                        return 'Please enter a valid image Form';
-                      }
-                      return null;
-                    },
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.image_outlined,
+                        color: Colors.blue,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: customFormField(
+                          controller: imageController,
+                          type: TextInputType.url,
+                          hint: 'Image Url',
+                          isPassword: false,
+                          valid: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter an image URL';
+                            }
+                            if (!value.startsWith('http') &&
+                                !value.startsWith('https')) {
+                              return 'Please enter a valid URL';
+                            }
+                            if (!value.endsWith('.png') &&
+                                !value.endsWith('.jpg') &&
+                                !value.endsWith('jpeg')) {
+                              return 'Please enter a valid image Form';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  customFormField(
-                    controller: nameController,
-                    type: TextInputType.name,
-                    hint: 'Enter Name',
-                    isPassword: false,
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.account_circle,
+                        color: Colors.blue,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: customFormField(
+                          controller: nameController,
+                          type: TextInputType.name,
+                          hint: 'Full Name',
+                          isPassword: false,
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  customFormField(
-                    controller: number1Controller,
-                    type: TextInputType.number,
-                    hint: 'Enter Number',
-                    isPassword: false,
-                    valid: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter a number';
-                      }
-                      if (value == null) {
-                        return 'Please enter a valid number';
-                      }
-                      if (value.length < 12) {
-                        return 'Please enter a Complete phone number';
-                      }
-                      return null;
-                    },
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.phone,
+                        color: Colors.blue,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: customFormField(
+                          controller: number1Controller,
+                          type: TextInputType.number,
+                          hint: 'Mobile Number',
+                          isPassword: false,
+                          valid: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter a number';
+                            }
+                            if (value == null) {
+                              return 'Please enter a valid number';
+                            }
+                            // if (value.length < 12) {
+                            //   return 'Please enter a Complete phone number';
+                            // }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  customFormField(
-                    controller: number2Controller,
-                    type: TextInputType.number,
-                    hint: 'Add Home number',
-                    isPassword: false,
-                    valid: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter a number';
-                      }
-                      if (value == null) {
-                        return 'Please enter a valid number';
-                      }
-                      if (value.length < 12) {
-                        return 'Please enter a Complete phone number';
-                      }
-                      return null;
-                    },
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.home,
+                        color: Colors.blue,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: customFormField(
+                          controller: number2Controller,
+                          type: TextInputType.number,
+                          hint: 'Home number',
+                          isPassword: false,
+                          valid: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter a number';
+                            }
+                            if (value == null) {
+                              return 'Please enter a valid number';
+                            }
+                            // if (value.length < 12) {
+                            //   return 'Please enter a Complete phone number';
+                            // }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 20,
                   ),
-                  customFormField(
-                    controller: addressController,
-                    type: TextInputType.emailAddress,
-                    hint: 'Email address',
-                    isPassword: false,
-                    valid: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter a Email';
-                      }
-                      if (value == null) {
-                        return 'Please enter a valid Email';
-                      }
-                      if (!value.contains("@") &&
-                          !value.contains('.com') &&
-                          !value.contains('.net')) {
-                        return 'Please enter a valid Email';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  customButton(
-                      text: 'Add',
-                      function: () {
-                        final isValid = _form.currentState.validate();
-                        if (!isValid) {
-                          return;
-                        }
-                        String image = imageController.text;
-                        String name = nameController.text;
-                        String number1 = number1Controller.text;
-                        String number2 = number2Controller.text;
-                        String address = addressController.text;
-                        if (image.isEmpty ||
-                            name.isEmpty ||
-                            number1.isEmpty ||
-                            address.isEmpty) {
-                          Fluttertoast.showToast(msg: 'please complete fields');
-                          return;
-                        }
-                        database
-                            .insertData(
-                                database: db,
-                                image: image,
-                                name: name,
-                                number1: int.parse(number1),
-                                number2: int.parse(number2),
-                                address: address)
-                            .then((value) {
-                          Fluttertoast.showToast(
-                              msg: 'Contact Added Successfully',backgroundColor: Colors.green);
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (_) => HomeScreen()));
-                        });
-                      }),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  customButton(
-                    text: 'Cancel',
-                    function: () => Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => HomeScreen()),
-                    ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.alternate_email,
+                        color: Colors.blue,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: customFormField(
+                          controller: addressController,
+                          type: TextInputType.emailAddress,
+                          hint: 'Email address',
+                          isPassword: false,
+                          valid: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter a Email';
+                            }
+                            if (value == null) {
+                              return 'Please enter a valid Email';
+                            }
+                            if (!value.contains("@") &&
+                                !value.contains('.com') &&
+                                !value.contains('.net')) {
+                              return 'Please enter a valid Email';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

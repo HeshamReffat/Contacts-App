@@ -31,7 +31,9 @@ class DataBase {
   Future<List<Map>> getData(Database database) async {
     return await database.rawQuery('SELECT * FROM contacts');
   }
-
+  Future<List<Map>> searchContact(Database database, String name) async {
+    return await database.rawQuery('SELECT * FROM contacts WHERE name Like "$name%"');
+  }
   Future<int> updateContact({
     Database database,
     String image,
@@ -39,10 +41,10 @@ class DataBase {
     int number1,
     int number2,
     String address,
-    String oldName,
+    int id,
   }) async {
     return await database.rawUpdate(
-        'UPDATE contacts SET image = ?, name = ?, number1 = ?, number2 = ?, address = ? WHERE name = "$oldName"',
+        'UPDATE contacts SET image = ?, name = ?, number1 = ?, number2 = ?, address = ? WHERE id = "$id"',
         ['$image', '$name', number1, number2, '$address']);
   }
 

@@ -5,43 +5,70 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'AddNewContact.dart';
 
-class ViewContact extends StatelessWidget {
+class ViewContact extends StatefulWidget {
   ViewContact({this.info, this.db});
 
   var info;
+  var database = DataBase();
   var db;
+
+  @override
+  _ViewContactState createState() => _ViewContactState();
+}
+
+class _ViewContactState extends State<ViewContact> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contact Info'),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Text(
+          'Contact Info',
+          style: TextStyle(color: Colors.black),
+        ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded),
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: Colors.black,
+          ),
           onPressed: () => Navigator.of(context)
               .pushReplacement(MaterialPageRoute(builder: (_) => HomeScreen())),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.edit),
+            icon: Icon(
+              Icons.edit,
+              color: Colors.green,
+            ),
             onPressed: () => updateContact(context),
           ),
           IconButton(
-              icon: Icon(Icons.delete),
+              icon: Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
               onPressed: () {
                 showDialog(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
                         title: Text('Delete Contact'),
-                        content:
-                            Text('Are You Sure Delete Contact ${info['name']}'),
+                        content: Text(
+                            'Are You Sure Delete Contact ${widget.info['name']}'),
                         actions: [
                           FlatButton(
                             onPressed: () {
                               var delete = DataBase();
                               delete.deleteContact(
-                                  database: db, name: '${info['name']}');
+                                  database: widget.db,
+                                  name: '${widget.info['name']}');
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (ctx) => HomeScreen()));
@@ -63,168 +90,108 @@ class ViewContact extends StatelessWidget {
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Container(
+          height: MediaQuery.of(context).size.height,
           color: Colors.white,
           child: Column(
             children: [
-              Card(
-                elevation: 8,
-                child: Container(
-                  height: 300,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(
-                          '${info['image']}',
-                        ),
-                        fit: BoxFit.cover),
-                  ),
+              Container(
+                height: 300,
+                width: double.infinity,
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage(
+                        '${widget.info['image']}',
+                      ),
+                      fit: BoxFit.cover),
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: 10,
+              ),
+              Center(
+                child: Text(
+                  '${widget.info['name']}',
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Divider(
+                color: Colors.grey,
               ),
               Container(
                 //color: Colors.white,
                 child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.only(left: 10.0),
                   child: Column(
                     children: [
-                      Card(
-                        elevation: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Name: ',
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                              Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width / 1.5,
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: Colors.grey[100],
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  '${info['name']}',
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                              ),
-                            ],
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.phone,
+                              size: 40,
+                              color: Colors.blue,
+                            ),
+                            Center(
+                                child: Text(
+                              ': ${widget.info['number1']}',
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                            )),
+                          ],
                         ),
                       ),
-                      SizedBox(
+                      Divider(
+                        color: Colors.grey,
                         height: 10,
                       ),
-                      Card(
-                        elevation: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Phone : ',
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                              Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width / 1.5,
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: Colors.grey[100],
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  '${info['number1']}',
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                              ),
-                            ],
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.home,
+                              size: 40,
+                              color: Colors.blue,
+                            ),
+                            Center(
+                                child: Text(
+                              ': ${widget.info['number2']}',
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                            )),
+                          ],
                         ),
                       ),
-                      SizedBox(
+                      Divider(
+                        color: Colors.grey,
                         height: 10,
                       ),
-                      Card(
-                        elevation: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Home: ',
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                              Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width / 1.5,
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: Colors.grey[100],
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  '${info['number2']}',
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                              ),
-                            ],
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.alternate_email,
+                              size: 40,
+                              color: Colors.blue,
+                            ),
+                            Center(
+                                child: Text(
+                              ': ${widget.info['address']}',
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                            )),
+                          ],
                         ),
                       ),
-                      SizedBox(
+                      Divider(
+                        color: Colors.grey,
                         height: 10,
-                      ),
-                      Card(
-                        elevation: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                'Email: ',
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                              Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width / 1.5,
-                                decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: Colors.grey[100],
-                                ),
-                                child: Center(
-                                    child: Text(
-                                  '${info['address']}',
-                                  style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                              ),
-                            ],
-                          ),
-                        ),
                       ),
                     ],
                   ),
@@ -238,7 +205,6 @@ class ViewContact extends StatelessWidget {
   }
 
   void updateContact(BuildContext context) {
-    var database = DataBase();
     final _form = GlobalKey<FormState>();
     TextEditingController imageController = TextEditingController();
     TextEditingController nameController = TextEditingController();
@@ -250,7 +216,7 @@ class ViewContact extends StatelessWidget {
         barrierDismissible: false,
         builder: (context) {
           return AlertDialog(
-            title: Text('Update Contact'),
+            title: Center(child: Text('Edit Contact')),
             content: SingleChildScrollView(
               child: Form(
                 key: _form,
@@ -259,106 +225,173 @@ class ViewContact extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      customFormField(
-                        controller: imageController,
-                        type: TextInputType.url,
-                        hint: 'Enter image Url',
-                        isPassword: false,
-                        valid: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter an image URL';
-                          }
-                          if (!value.startsWith('http') &&
-                              !value.startsWith('https')) {
-                            return 'Please enter a valid URL';
-                          }
-                          if (!value.endsWith('.png') &&
-                              !value.endsWith('.jpg') &&
-                              !value.endsWith('jpeg')) {
-                            return 'Please enter a valid image Form';
-                          }
-                          return null;
-                        },
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.image_outlined,
+                            color: Colors.blue,
+                            size: 30,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: customFormField(
+                              controller: imageController
+                                ..text = '${widget.info['image']}',
+                              type: TextInputType.url,
+                              isPassword: false,
+                              valid: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter an image URL';
+                                }
+                                if (!value.startsWith('http') &&
+                                    !value.startsWith('https')) {
+                                  return 'Please enter a valid URL';
+                                }
+                                if (!value.endsWith('.png') &&
+                                    !value.endsWith('.jpg') &&
+                                    !value.endsWith('jpeg')) {
+                                  return 'Please enter a valid image Form';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      customFormField(
-                        controller: nameController,
-                        type: TextInputType.name,
-                        hint: 'Enter Name',
-                        isPassword: false,
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.account_circle,
+                            color: Colors.blue,
+                            size: 30,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: customFormField(
+                              controller: nameController
+                                ..text = '${widget.info['name']}',
+                              type: TextInputType.name,
+                              isPassword: false,
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      customFormField(
-                        controller: number1Controller,
-                        type: TextInputType.number,
-                        hint: 'Enter Number',
-                        isPassword: false,
-                        valid: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter a number';
-                          }
-                          if (value == null) {
-                            return 'Please enter a valid number';
-                          }
-                          if (value.length < 12) {
-                            return 'Please enter a Complete phone number';
-                          }
-                          return null;
-                        },
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.phone,
+                            color: Colors.blue,
+                            size: 30,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: customFormField(
+                              controller: number1Controller
+                                ..text = '${widget.info['number1']}',
+                              type: TextInputType.number,
+                              isPassword: false,
+                              valid: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter a number';
+                                }
+                                if (value == null) {
+                                  return 'Please enter a valid number';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      customFormField(
-                        controller: number2Controller,
-                        type: TextInputType.number,
-                        hint: 'Add Home number',
-                        isPassword: false,
-                        valid: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter a number';
-                          }
-                          if (value == null) {
-                            return 'Please enter a valid number';
-                          }
-                          if (value.length < 12) {
-                            return 'Please enter a Complete phone number';
-                          }
-                          return null;
-                        },
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.home,
+                            color: Colors.blue,
+                            size: 30,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: customFormField(
+                              controller: number2Controller
+                                ..text = '${widget.info['number2']}',
+                              type: TextInputType.number,
+                              isPassword: false,
+                              valid: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter a number';
+                                }
+                                if (value == null) {
+                                  return 'Please enter a valid number';
+                                }
+                                // if (value.length < 12) {
+                                //   return 'Please enter a Complete phone number';
+                                // }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      customFormField(
-                        controller: addressController,
-                        type: TextInputType.emailAddress,
-                        hint: 'Email address',
-                        isPassword: false,
-                        valid: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter a Email';
-                          }
-                          if (value == null) {
-                            return 'Please enter a valid Email';
-                          }
-                          if (!value.contains("@") &&
-                              !value.contains('.com') &&
-                              !value.contains('.net')) {
-                            return 'Please enter a valid Email';
-                          }
-                          return null;
-                        },
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.alternate_email,
+                            color: Colors.blue,
+                            size: 30,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: customFormField(
+                              controller: addressController
+                                ..text = '${widget.info['address']}',
+                              type: TextInputType.emailAddress,
+                              isPassword: false,
+                              valid: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter a Email';
+                                }
+                                if (value == null) {
+                                  return 'Please enter a valid Email';
+                                }
+                                if (!value.contains("@") &&
+                                    !value.contains('.com') &&
+                                    !value.contains('.net')) {
+                                  return 'Please enter a valid Email';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: 20,
                       ),
                       customButton(
-                          text: 'Update',
+                          text: 'Save',
                           function: () {
                             final isValid = _form.currentState.validate();
                             if (!isValid) {
@@ -369,30 +402,32 @@ class ViewContact extends StatelessWidget {
                             String number1 = number1Controller.text;
                             String number2 = number2Controller.text;
                             String address = addressController.text;
-                            String oldName = info['name'];
                             if (image.isEmpty ||
                                 name.isEmpty ||
                                 number1.isEmpty ||
                                 address.isEmpty) {
-                              Fluttertoast.showToast(msg: 'please complete fields');
+                              Fluttertoast.showToast(
+                                  msg: 'please complete fields');
                               return;
                             }
-                            database
+                            widget.database
                                 .updateContact(
-                              database: db,
+                              database: widget.db,
                               image: image,
                               name: name,
                               number1: int.parse(number1),
                               number2: int.parse(number2),
                               address: address,
-                              oldName: oldName,
+                              id: widget.info['id'],
                             )
                                 .then((value) {
                               Fluttertoast.showToast(
                                   msg: 'Contact Updated Successfully',
                                   backgroundColor: Colors.green);
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(builder: (_) => HomeScreen()));
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => HomeScreen()));
                             });
                           }),
                       SizedBox(
@@ -400,9 +435,7 @@ class ViewContact extends StatelessWidget {
                       ),
                       customButton(
                         text: 'Cancel',
-                        function: () => Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => HomeScreen()),
-                        ),
+                        function: () => Navigator.of(context).pop(),
                       ),
                     ],
                   ),

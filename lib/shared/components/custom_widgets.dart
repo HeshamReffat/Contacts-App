@@ -10,6 +10,7 @@ Widget customButton({
 }) =>
     Container(
       width: wid,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: back,
         borderRadius: BorderRadius.circular(
@@ -32,7 +33,8 @@ Widget customFormField({
   hint = '',
   @required type,
   isPassword = false,
-  valid
+  Function changed,
+  valid,
 }) =>
     Container(
       decoration: BoxDecoration(
@@ -51,6 +53,7 @@ Widget customFormField({
         keyboardType: type,
         obscureText: isPassword,
         validator: valid,
+        onChanged: changed,
         decoration: InputDecoration(
           hintText: hint,
           border: InputBorder.none,
