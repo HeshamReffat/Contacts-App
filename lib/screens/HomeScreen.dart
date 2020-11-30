@@ -41,34 +41,30 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.only(left:20.0),
+          child: Icon(Icons.account_circle,color: Colors.black,size: 40,),
+        ),
         backgroundColor: Colors.white,
-        title: Row(
-          children: [
-            Icon(Icons.account_circle,color: Colors.black,),
-            SizedBox(width: 5,),
-            Expanded(
-              child: Container(
-                height: 40.0,
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: customFormField(
-                    controller: searchController,
-                    type: TextInputType.text,
-                    hint: 'Search Contacts',
-                    changed: (s) {
-                      var database = DataBase();
-                      database.searchContact(data, s).then((value) {
-                        setState(() {
-                          list = value;
-                        });
-                      });
-                    }),
-              ),
-            ),
-          ],
+        title: Container(
+          height: 40.0,
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: customFormField(
+              controller: searchController,
+              type: TextInputType.text,
+              hint: 'Search Contacts',
+              changed: (s) {
+                var database = DataBase();
+                database.searchContact(data, s).then((value) {
+                  setState(() {
+                    list = value;
+                  });
+                });
+              }),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -118,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(left: 20.0),
+        padding: const EdgeInsets.only(left: 5.0),
         child: Row(
           children: [
             Padding(
